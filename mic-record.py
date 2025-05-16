@@ -9,11 +9,11 @@ import sys
 import atexit
 
 # Load the Whisper model
-model = whisper.load_model("base")
+model = whisper.load_model("medium")
 
 # Audio parameters
 BUFFER_SIZE = 1024
-AUDIO_BUFFER_DURATION = 1.0  # seconds
+AUDIO_BUFFER_DURATION = 15.0  # seconds
 INPUT_SAMPLE_RATE = 48000    # Input sample rate from audio device
 WHISPER_SAMPLE_RATE = 16000  # Required sample rate for Whisper
 SILENCE_THRESHOLD = 0.01     # Reduced threshold to detect more audio
