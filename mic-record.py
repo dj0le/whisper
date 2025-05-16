@@ -7,13 +7,14 @@ import time
 import signal
 import sys
 import atexit
+import pyperclip
 
 # Load the Whisper model
-model = whisper.load_model("medium")
+model = whisper.load_model("base")
 
 # Audio parameters
 BUFFER_SIZE = 1024
-AUDIO_BUFFER_DURATION = 15.0  # seconds
+AUDIO_BUFFER_DURATION = 10.0  # seconds
 INPUT_SAMPLE_RATE = 48000    # Input sample rate from audio device
 WHISPER_SAMPLE_RATE = 16000  # Required sample rate for Whisper
 SILENCE_THRESHOLD = 0.01     # Reduced threshold to detect more audio
@@ -40,6 +41,15 @@ def audio_callback(indata, frames, time, status):
         if max_val > SILENCE_THRESHOLD:
             print(f"Audio level: {max_val:.3f}", end="\r")
         audio_queue.put(indata.copy())
+
+def copy_to_clipboard(text):
+    """Copies the given text to the clipboard."""
+    try:
+        pyperclip.copy(text)
+        print("Text copied to clipboard.")
+    except pyperclip.PyperclipException as e:
+        print(f"Error copying to clipboard: {e}. Ensure you have xclip or xsel installed.")
+
 
 def transcribe_audio():
     """Thread to transcribe audio in real time."""
@@ -82,6 +92,7 @@ def transcribe_audio():
                         text = result['text'].strip()
                         if text:
                             print(f"\nTranscription: {text}")
+                            copy_to_clipboard(text)  # Copy the transcribed text to the clipboard
                         else:
                             print("\nNo speech detected in audio")
                     except Exception as e:
