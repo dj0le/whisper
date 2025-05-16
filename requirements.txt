@@ -2,3 +2,4 @@ whisper-ai
 sounddevice
 numpy
 pyperclip
+xclip
